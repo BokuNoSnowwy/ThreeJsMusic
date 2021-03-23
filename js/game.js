@@ -9,7 +9,7 @@ startButton.addEventListener('click', function(){
 })
 
 function hideButton(){
-    
+    document.getElementById("startButton").style.display = 'none';
 }
 
 function init(){

@@ -1,3 +1,5 @@
+import { FBXLoader } from '../loaders/FBXLoader.js';
+
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({antialas : true});
@@ -7,7 +9,6 @@ startButton.addEventListener('click', function(){
     init();
     hideButton();
 })
-
 function hideButton(){
     document.getElementById("startButton").style.display = 'none';
 }
@@ -67,7 +68,16 @@ function init(){
 	sound.setLoop( true );
 	sound.setVolume( 0.1 );
 	sound.play();
-});
+    });
+
+
+    //Mesh Import
+    const loader = new FBXLoader();
+
+    loader.load( 'meshs/fbx/ArchCantina.fbx', function ( object ) {
+
+        scene.add( object );
+    } );
 }
 
 

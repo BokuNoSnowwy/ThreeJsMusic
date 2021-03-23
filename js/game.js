@@ -2,51 +2,55 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({antialas : true});
 
-var ySpeed = 0.1;
-var xSpeed = 0.1;
+function init(){
 
-var colorsDrawing = [
-    "#ffbe0b",
-    "#fb5607",
-    "#ff006e",
-    "#8338ec",
-    "#3a86ff"
-]
+    var ySpeed = 0.1;
+    var xSpeed = 0.1;
+    
+    var colorsDrawing = [
+        "#ffbe0b",
+        "#fb5607",
+        "#ff006e",
+        "#8338ec",
+        "#3a86ff"
+    ]
+    
+    renderer.setSize(window.innerWidth,window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+    
+    // resize canvas on resize window
+    window.addEventListener( 'resize', () => {
+        let width = window.innerWidth
+        let height = window.innerHeight
+        renderer.setSize( width, height )
+        camera.aspect = width / height
+        camera.updateProjectionMatrix()
+    })
+    
+    renderer.setClearColor("#222222")
+    
+    //Ambient Lights 
+    var ambientLight = new THREE.AmbientLight ( 0xffffff, 0.2)
+    scene.add( ambientLight )
+    
+    
+    //Point Lights
+    var pointLight = new THREE.PointLight( 0xffffff, 1 );
+    pointLight.position.set( 25, 50, 25 );
+    scene.add( pointLight );
+    
+    
+    //Box
+    var geometry = new THREE.BoxGeometry(1,1,1);
+    var material = new THREE.MeshStandardMaterial( { color: 0xff0120, flatShading: true, metalness: 0, roughness: 1 })
+    var cube = new THREE.Mesh(geometry,material);
+    scene.add(cube);
+    renderer.render(scene,camera);
+    
+    //Camera Pos
+    camera.position.z = 5;
+}
 
-renderer.setSize(window.innerWidth,window.innerHeight);
-document.body.appendChild(renderer.domElement);
-
-// resize canvas on resize window
-window.addEventListener( 'resize', () => {
-	let width = window.innerWidth
-	let height = window.innerHeight
-	renderer.setSize( width, height )
-	camera.aspect = width / height
-	camera.updateProjectionMatrix()
-})
-
-renderer.setClearColor("#222222")
-
-//Ambient Lights 
-var ambientLight = new THREE.AmbientLight ( 0xffffff, 0.2)
-scene.add( ambientLight )
-
-
-//Point Lights
-var pointLight = new THREE.PointLight( 0xffffff, 1 );
-pointLight.position.set( 25, 50, 25 );
-scene.add( pointLight );
-
-
-//Box
-var geometry = new THREE.BoxGeometry(1,1,1);
-var material = new THREE.MeshStandardMaterial( { color: 0xff0120, flatShading: true, metalness: 0, roughness: 1 })
-var cube = new THREE.Mesh(geometry,material);
-scene.add(cube);
-renderer.render(scene,camera);
-
-//Camera Pos
-camera.position.z = 5;
 
 
 //Box Animation

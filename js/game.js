@@ -2,8 +2,17 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({antialas : true});
 
-function init(){
+const startButton = document.getElementById("startButton");
+startButton.addEventListener('click', function(){
+    init();
+    hideButton();
+})
 
+function hideButton(){
+    
+}
+
+function init(){
     var ySpeed = 0.1;
     var xSpeed = 0.1;
     
@@ -38,19 +47,21 @@ function init(){
     var pointLight = new THREE.PointLight( 0xffffff, 1 );
     pointLight.position.set( 25, 50, 25 );
     scene.add( pointLight );
-    
-    
-    //Box
-    var geometry = new THREE.BoxGeometry(1,1,1);
-    var material = new THREE.MeshStandardMaterial( { color: 0xff0120, flatShading: true, metalness: 0, roughness: 1 })
-    var cube = new THREE.Mesh(geometry,material);
-    scene.add(cube);
-    renderer.render(scene,camera);
+   
     
     //Camera Pos
-    camera.position.z = 5;
+    camera.position.z = 5;   
 }
 
+
+//Box
+const geometry = new THREE.BoxGeometry(1,1,1);
+const material = new THREE.MeshStandardMaterial( { color: 0xff0120, flatShading: true, metalness: 0, roughness: 1 });
+const cube = new THREE.Mesh(geometry,material);
+scene.add(cube);
+renderer.render(scene,camera);
+
+animate();
 
 
 //Box Animation
@@ -97,5 +108,3 @@ function onDocumentKeyDown(event){
     }
 
 }
-
-animate();

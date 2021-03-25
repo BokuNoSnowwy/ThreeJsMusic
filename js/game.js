@@ -3,6 +3,16 @@ import { FBXLoader } from '../loaders/FBXLoader.js';
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({antialas : true});
+const clock = new THREE.Clock();
+
+
+//BPM
+const bpm = 128;
+const secondBeat = 1/(bpm /60);
+let timerTic = secondBeat;
+//MeshArray
+const torusMesh = [];
+
 
 const startButton = document.getElementById("startButton");
 startButton.addEventListener('click', function(){
@@ -74,11 +84,38 @@ function init(){
     //Mesh Import
     const loader = new FBXLoader();
 
-    loader.load( 'meshs/fbx/ArchCantina.fbx', function ( object ) {
+    //Torus 
+    for (let i = 0; i < 4; i++) {
+        loader.load( 'meshs/fbx/TorusCircle.fbx', function ( object ) {
+            scene.add( object );
+            torusMesh.push(object);
 
-        scene.add( object );
-    } );
+            object.position.z += 1*i;
+            object.rotation.x = 80;
+            object.rotation.y = 5*i;
+
+            object.traverse( function ( child ) {
+                if ( child.isMesh ) {
+                    //Change Purple Mat
+                    child.material[1].emissive = child.material[1].color;
+                    child.material[1].emissiveIntensity = 0.75;
+
+                    //Change Red Mat
+                    child.material[4].emissive = child.material[4].color;
+                    child.material[4].emissiveIntensity = 0.15;
+                    console.log( child.material);
+
+                    //Change Black Mat
+                    //child.material[3].color = new THREE.Color( 0xffffff );
+                }
+            } );
+            var x = 1/10;
+            object.scale.set(x,x,x);
+        } );
+    }
 }
+
+   
 
 
 //Box
@@ -86,8 +123,8 @@ const geometry = new THREE.BoxGeometry(1,1,1);
 const material = new THREE.MeshStandardMaterial( { color: 0xff0120, flatShading: true, metalness: 0, roughness: 1 });
 const cube = new THREE.Mesh(geometry,material);
 scene.add(cube);
-renderer.render(scene,camera);
 
+clockTic();
 animate();
 
 
@@ -97,8 +134,29 @@ function animate(){
     cube.rotation.x += 0.04;
     cube.rotation.y += 0.04;
 
-    camera.position.z -= 0.01;
+    //camera.position.z -= 0.01;
+    camera.position.y = 0.15;
+    torusMesh.forEach(torus => {
+        torus.rotation.y += 0.02;
+    });
     renderer.render(scene,camera);
+}
+
+function clockTic(){
+    requestAnimationFrame(clockTic);
+    timerTic -= 0.01;
+    if(timerTic < 0){
+        console.log("Tic");
+        timerTic = secondBeat;
+    }
+}
+
+function getRandomIntNumberBetween(max){
+    return Math.floor(Math.random()*(max-0+1)+0);
+}
+
+function getRandomFloatNumberBetween(max){
+    return Math.random()*(max-0+1)+0;
 }
 
 
@@ -128,15 +186,4 @@ function onDocumentKeyDown(event){
         scene.add(cube);
         cube.position.set(0,0,0);
     }
-
-    function getRandomIntNumberBetween(max){
-        return Math.floor(Math.random()*(max-0+1)+0);
-    }
-
-    function getRandomFloatNumberBetween(max){
-        return Math.random()*(max-0+1)+0;
-    }
-
 }
-
-animate();

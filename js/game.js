@@ -6,12 +6,22 @@ const renderer = new THREE.WebGLRenderer({antialas : true});
 const clock = new THREE.Clock();
 
 
+//Music 
+// create an AudioListener and add it to the camera
+const listener = new THREE.AudioListener();
+camera.add( listener );
+// create a global audio source
+const sound = new THREE.Audio( listener );
+
+
 //BPM
 const bpm = 128;
 const secondBeat = 1/(bpm /60);
 let timerTic = secondBeat;
+var countTic =0;
 //MeshArray
 const torusMesh = [];
+const cubeMeshs = [];
 
 
 const startButton = document.getElementById("startButton");
@@ -23,7 +33,10 @@ function hideButton(){
     document.getElementById("startButton").style.display = 'none';
 }
 
+
+
 function init(){
+  
     var ySpeed = 0.1;
     var xSpeed = 0.1;
     
@@ -63,14 +76,6 @@ function init(){
     //Camera Pos
     camera.position.z = 5;
 
-    //Music 
-    // create an AudioListener and add it to the camera
-    const listener = new THREE.AudioListener();
-    camera.add( listener );
-
-    // create a global audio source
-    const sound = new THREE.Audio( listener );
-
     // load a sound and set it as the Audio object's buffer
     const audioLoader = new THREE.AudioLoader();
     audioLoader.load( 'audio/the-living-tombstone-dog-of-wisdom-remix-blue-feat-joe-gran.mp3', function( buffer ) {
@@ -98,11 +103,48 @@ function init(){
                 if ( child.isMesh ) {
                     //Change Purple Mat
                     child.material[1].emissive = child.material[1].color;
-                    child.material[1].emissiveIntensity = 0.75;
+                    child.material[1].emissiveIntensity = 0.30;
 
                     //Change Red Mat
                     child.material[4].emissive = child.material[4].color;
-                    child.material[4].emissiveIntensity = 0.15;
+                    child.material[4].emissiveIntensity = 0.30;
+                    //console.log( child.material);
+
+                    //Change Black Mat
+                    //child.material[3].color = new THREE.Color( 0xffffff );
+                }
+            } );
+            var x = 1/10;
+            object.scale.set(x,x,x);
+        } );
+    }
+
+     //Cube 
+     for (let i = 0; i < 1; i++) {
+        loader.load( 'meshs/fbx/Cube.fbx', function ( object ) {
+            scene.add( object );
+            cubeMeshs.push(object);
+
+            object.position.z += 1*i;
+
+            /*
+            var boundingBox = new THREE.Box3();
+            scene.add(boundingBox);
+            boundingBox.setFromObject(object)
+
+            var pivotCube = new THREE.Object3D();
+            scene.add(pivotCube);
+
+            pivotCube.position.set(boundingBox.position);
+            pivotCube.add(object);
+            console.log(pivotCube.children[0]);
+            */
+
+            object.traverse( function ( child ) {
+                if ( child.isMesh ) {
+                    child.material[1].emissive = new THREE.Color( 0xff0000 );
+                    child.material[1].emissiveIntensity = 1;
+
                     console.log( child.material);
 
                     //Change Black Mat
@@ -113,19 +155,24 @@ function init(){
             object.scale.set(x,x,x);
         } );
     }
+    
 }
 
    
 
 
 //Box
-const geometry = new THREE.BoxGeometry(1,1,1);
-const material = new THREE.MeshStandardMaterial( { color: 0xff0120, flatShading: true, metalness: 0, roughness: 1 });
-const cube = new THREE.Mesh(geometry,material);
-scene.add(cube);
 
-clockTic();
-animate();
+
+    const geometry = new THREE.BoxGeometry(1,1,1);
+    const material = new THREE.MeshStandardMaterial( { color: 0xff0120, flatShading: true, metalness: 0, roughness: 1 });
+    const cube = new THREE.Mesh(geometry,material);
+    scene.add(cube);
+    
+
+    animate();
+    clockTic();
+
 
 
 //Box Animation
@@ -136,18 +183,60 @@ function animate(){
 
     //camera.position.z -= 0.01;
     camera.position.y = 0.15;
+
+    //Torus Rotation
     torusMesh.forEach(torus => {
+        console.log(countTic%2);
         torus.rotation.y += 0.02;
+        switch (countTic%2){
+            case 0 :
+                console.log("tik")
+                torus.traverse( function ( child ) {
+                    if ( child.isMesh ) {
+                        child.material[1].emissive = new THREE.Color(0x00ff00);
+                        child.material[1].color = new THREE.Color(0x00ff00);
+                        child.material[4].emissive = new THREE.Color(0xff0000);
+                        child.material[4].color = new THREE.Color(0xff0000);
+                    }
+                } );
+                break;
+            case 1 :
+                console.log("tok")
+                torus.traverse( function ( child ) {
+                    if ( child.isMesh ) {
+                        child.material[1].emissive = new THREE.Color(0xff0000);
+                        child.material[1].color = new THREE.Color(0xff0000);
+                        child.material[4].emissive = new THREE.Color(0x00ff00);
+                        child.material[4].color = new THREE.Color(0x00ff00);
+                    }
+                } );
+                break;
+        }
     });
+
+    //All Cube Rotation
+    cubeMeshs.forEach(cube => {
+        cube.rotation.x += 0.04;
+        cube.rotation.y += 0.04;
+    });
+
     renderer.render(scene,camera);
+
 }
 
 function clockTic(){
     requestAnimationFrame(clockTic);
-    timerTic -= 0.01;
-    if(timerTic < 0){
-        console.log("Tic");
-        timerTic = secondBeat;
+    if(sound){
+        if(sound.isPlaying){
+            timerTic -= clock.getDelta();
+            if(timerTic < 0){
+                countTic += 1;
+                if(countTic > 3){
+                    countTic = 0
+                }
+                timerTic = secondBeat;
+            }
+        }
     }
 }
 

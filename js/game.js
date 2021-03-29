@@ -23,6 +23,7 @@ const bpm = 128;
 const secondBeat = 1 / (bpm / 60);
 let timerTic = secondBeat;
 var countTic = 1;
+var demiTic = false;
 //MeshArray
 const torusMesh = [];
 const cubeMeshs = [];
@@ -154,6 +155,13 @@ animate();
 clockTic();
 
 
+//Box
+    const geometry = new THREE.BoxGeometry(1,1,1);
+    const material = new THREE.MeshStandardMaterial( { color: 0xff0120, flatShading: true, metalness: 0, roughness: 1 });
+    const cubeT = new THREE.Mesh(geometry,material);
+    scene.add(cubeT);
+    let ratioCubeT = 0.0000244140625;
+    
 
 //Box Animation
 function animate() {
@@ -189,20 +197,38 @@ function animate() {
         }
     });
 
+   
+
+
     //All Cube Rotation
     cubeMeshs.forEach(cube => {
         cube.rotation.x += 0.04;
-        cube.rotation.y += 0.04;
+        //cube.rotation.y += 0.04;
+        
+        if(demiTic)
+        {
+            ratioCubeT *= 2;
+            cubeT.scale.set(.8 + ratioCubeT, .8 + ratioCubeT, .8 + ratioCubeT)
+        }
+        else{
+            ratioCubeT /= 2;
+            cubeT.scale.set(1.2 - ratioCubeT, 1.2- ratioCubeT, 1.2 - ratioCubeT)
+
+        }
+
+        console.log(cubeT.scale)
     });
 
     renderer.render(scene, camera);
 
 }
 
-function clockTic() {
+
+function clockTic(){
     requestAnimationFrame(clockTic);
-    if (sound) {
-        if (sound.isPlaying) {
+    
+    if(sound){
+        if(sound.isPlaying){
             timerTic -= clock.getDelta();
             if (timerTic < 0) {
                 countTic += 1;
@@ -210,6 +236,19 @@ function clockTic() {
                     countTic = 1
                 }
                 timerTic = secondBeat;
+            }
+
+            
+            
+            if(timerTic <= secondBeat / 2)
+            {
+                demiTic = true;
+                
+            }
+            else{
+                demiTic = false;
+                
+               
             }
         }
     }

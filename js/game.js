@@ -2,52 +2,55 @@ import { FBXLoader } from '../loaders/FBXLoader.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({antialas : true});
+const renderer = new THREE.WebGLRenderer({ antialas: true });
 const clock = new THREE.Clock();
 
 
 //Music 
 // create an AudioListener and add it to the camera
 const listener = new THREE.AudioListener();
-camera.add( listener );
+camera.add(listener);
 // create a global audio source
-const sound = new THREE.Audio( listener );
+const sound = new THREE.Audio(listener);
 
 
 //BPM
 const bpm = 128;
-const secondBeat = 1/(bpm /60);
+const secondBeat = 1 / (bpm / 60);
 let timerTic = secondBeat;
 var countTic = 1;
 //MeshArray
 const torusMesh = [];
 const cubeMeshs = [];
 
+var geometry = new THREE.BoxGeometry(1, 1, 1);
+var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: false });
+let cube1 = new THREE.Mesh(geometry, material);
+cubeMeshs.push(cube1);
 
 const startButton = document.getElementById("startButton");
-startButton.addEventListener('click', function(){
+startButton.addEventListener('click', function () {
     init();
     hideButton();
 })
-function hideButton(){
+function hideButton() {
     document.getElementById("startButton").style.display = 'none';
 }
 
-    // load a sound and set it as the Audio object's buffer
-    const audioLoader = new THREE.AudioLoader();
-    audioLoader.load( 'audio/the-living-tombstone-dog-of-wisdom-remix-blue-feat-joe-gran.mp3', function( buffer ) {
-	sound.setBuffer( buffer );
-	sound.setLoop( true );
-	sound.setVolume( 0.1 );
-    });
+// load a sound and set it as the Audio object's buffer
+const audioLoader = new THREE.AudioLoader();
+audioLoader.load('audio/the-living-tombstone-dog-of-wisdom-remix-blue-feat-joe-gran.mp3', function (buffer) {
+    sound.setBuffer(buffer);
+    sound.setLoop(true);
+    sound.setVolume(0.1);
+});
 
 
+function init() {
 
-function init(){
-  
     var ySpeed = 0.1;
     var xSpeed = 0.1;
-    
+
     var colorsDrawing = [
         "#ffbe0b",
         "#fb5607",
@@ -55,52 +58,52 @@ function init(){
         "#8338ec",
         "#3a86ff"
     ]
-    
-    renderer.setSize(window.innerWidth,window.innerHeight);
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
-    
+
     // resize canvas on resize window
-    window.addEventListener( 'resize', () => {
+    window.addEventListener('resize', () => {
         let width = window.innerWidth
         let height = window.innerHeight
-        renderer.setSize( width, height )
+        renderer.setSize(width, height)
         camera.aspect = width / height
         camera.updateProjectionMatrix()
     })
-    
+
     renderer.setClearColor("#222222")
-    
+
     //Ambient Lights 
-    var ambientLight = new THREE.AmbientLight ( 0xffffff, 0.2)
-    scene.add( ambientLight )
-    
-    
+    var ambientLight = new THREE.AmbientLight(0xffffff, 0.2)
+    scene.add(ambientLight)
+
+
     //Point Lights
-    var pointLight = new THREE.PointLight( 0xffffff, 1 );
-    pointLight.position.set( 25, 50, 25 );
-    scene.add( pointLight );
-   
-    
+    var pointLight = new THREE.PointLight(0xffffff, 1);
+    pointLight.position.set(25, 50, 25);
+    scene.add(pointLight);
+
+
     //Camera Pos
     camera.position.z = 5;
 
-	sound.play();
+    sound.play();
 
     //Mesh Import
     const loader = new FBXLoader();
 
     //Torus 
     for (let i = 0; i < 4; i++) {
-        loader.load( 'meshs/fbx/TorusCircle.fbx', function ( object ) {
-            scene.add( object );
+        loader.load('meshs/fbx/TorusCircle.fbx', function (object) {
+            scene.add(object);
             torusMesh.push(object);
 
-            object.position.z += 1*i;
+            object.position.z += 1 * i;
             object.rotation.x = 80;
-            object.rotation.y = 5*i;
+            object.rotation.y = 5 * i;
 
-            object.traverse( function ( child ) {
-                if ( child.isMesh ) {
+            object.traverse(function (child) {
+                if (child.isMesh) {
                     //Change Purple Mat
                     child.material[1].emissive = child.material[1].color;
                     child.material[1].emissiveIntensity = 0.30;
@@ -113,103 +116,64 @@ function init(){
                     //Change Black Mat
                     //child.material[3].color = new THREE.Color( 0xffffff );
                 }
-            } );
-            var x = 1/10;
-            object.scale.set(x,x,x);
-        } );
+            });
+            var x = 1 / 10;
+            object.scale.set(x, x, x);
+        });
     }
 
-     //Cube 
-     for (let i = 0; i < 1; i++) {
-        loader.load( 'meshs/fbx/Cube.fbx', function ( object ) {
-            scene.add( object );
-            cubeMeshs.push(object);
+    loader.load('meshs/fbx/Cube.fbx', function (object) {
+        scene.add(object);
 
-            object.position.z += 1*i;
+        setUpMesh(cube1, object, new THREE.Vector3(-1.07, 0.5, 0))
+        var x = 1 / 10;
+        object.scale.set(x, x, x);
 
-            /*
-            var boundingBox = new THREE.Box3();
-            scene.add(boundingBox);
-            boundingBox.setFromObject(object)
-
-            var pivotCube = new THREE.Object3D();
-            scene.add(pivotCube);
-
-            pivotCube.position.set(boundingBox.position);
-            pivotCube.add(object);
-            console.log(pivotCube.children[0]);
-            */
-
-            object.traverse( function ( child ) {
-                if ( child.isMesh ) {
-                    child.material[1].emissive = new THREE.Color( 0xff0000 );
-                    child.material[1].emissiveIntensity = 1;
-                    child.material[1].color = new THREE.Color( 0xff0000 );;
-
-                    console.log( child.material);
-
-                    //Change Black Mat
-                    //child.material[3].color = new THREE.Color( 0xffffff );
-                }
-            } );
-            var x = 1/10;
-            object.scale.set(x,x,x);
-        } );
-    }
-    
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.material[1].emissive = new THREE.Color(0xff0000);
+                child.material[1].emissiveIntensity = 1;
+                child.material[1].color = new THREE.Color(0xff0000);;
+            }
+        });
+    });
 }
 
-   
-
-
-//Box
-    const geometry = new THREE.BoxGeometry(1,1,1);
-    const material = new THREE.MeshStandardMaterial( { color: 0xff0120, flatShading: true, metalness: 0, roughness: 1 });
-    const cube = new THREE.Mesh(geometry,material);
-    scene.add(cube);
-    
-
-    animate();
-    clockTic();
+animate();
+clockTic();
 
 
 
 //Box Animation
-function animate(){
+function animate() {
     requestAnimationFrame(animate);
-    cube.rotation.x += 0.04;
-    cube.rotation.y += 0.04;
 
-    console.log(countTic);
-    //camera.position.z -= 0.01;
     camera.position.y = 0.15;
     //Torus Rotation
     torusMesh.forEach(torus => {
 
         torus.rotation.y += 0.02;
 
-        switch (countTic > 2){
-            case true :
-                console.log("tik")
-                torus.traverse( function ( child ) {
-                    if ( child.isMesh ) {
+        switch (countTic > 2) {
+            case true:
+                torus.traverse(function (child) {
+                    if (child.isMesh) {
                         child.material[1].emissive = new THREE.Color(0x00ff00);
                         child.material[1].color = new THREE.Color(0x00ff00);
                         child.material[4].emissive = new THREE.Color(0xff0000);
                         child.material[4].color = new THREE.Color(0xff0000);
                     }
-                } );
+                });
                 break;
-            case false :
-                console.log("tok")
-                torus.traverse( function ( child ) {
-                    if ( child.isMesh ) {
+            case false:
+                torus.traverse(function (child) {
+                    if (child.isMesh) {
                         child.material[1].emissive = new THREE.Color(0xff0000);
                         child.material[1].color = new THREE.Color(0xff0000);
                         child.material[4].emissive = new THREE.Color(0x00ff00);
                         child.material[4].color = new THREE.Color(0x00ff00);
                     }
-                } );
+                });
                 break;
         }
     });
@@ -217,63 +181,70 @@ function animate(){
     //All Cube Rotation
     cubeMeshs.forEach(cube => {
         cube.rotation.x += 0.04;
-        //cube.rotation.y += 0.04;
+        cube.rotation.y += 0.04;
     });
 
-    renderer.render(scene,camera);
+    renderer.render(scene, camera);
 
 }
 
-function clockTic(){
+function clockTic() {
     requestAnimationFrame(clockTic);
-    if(sound){
-        if(sound.isPlaying){
+    if (sound) {
+        if (sound.isPlaying) {
             timerTic -= clock.getDelta();
-            if(timerTic < 0){
+            if (timerTic < 0) {
                 countTic += 1;
-                if(countTic > 4){
+                if (countTic > 4) {
                     countTic = 1
                 }
                 timerTic = secondBeat;
             }
         }
-
     }
 }
 
-function getRandomIntNumberBetween(max){
-    return Math.floor(Math.random()*(max-0+1)+0);
+//Permet de créer un mesh et de lui mettre un parent a sa position
+function setUpMesh(parent, child, position) {
+    scene.add(parent);
+    parent.position.copy(position);
+    parent.add(child);
+    child.position.copy(new THREE.Vector3(-position.x, -position.y, -position.z));
 }
 
-function getRandomFloatNumberBetween(max){
-    return Math.random()*(max-0+1)+0;
+function getRandomIntNumberBetween(max) {
+    return Math.floor(Math.random() * (max - 0 + 1) + 0);
+}
+
+function getRandomFloatNumberBetween(max) {
+    return Math.random() * (max - 0 + 1) + 0;
 }
 
 
 document.addEventListener("keydown", onDocumentKeyDown, false);
-function onDocumentKeyDown(event){
+function onDocumentKeyDown(event) {
 
     var keyCode = event.which;
 
-    if(keyCode == 90){
+    if (keyCode == 90) {
         cube.position.y += ySpeed;
     }
-    if (keyCode == 83){
+    if (keyCode == 83) {
         cube.position.y -= ySpeed;
     }
-    if(keyCode == 81){
+    if (keyCode == 81) {
         cube.position.x -= xSpeed;
     }
-    if (keyCode == 68){
+    if (keyCode == 68) {
         cube.position.x += xSpeed;
     }
 
-    if(keyCode == 32){
+    if (keyCode == 32) {
         var cubeLenght = getRandomFloatNumberBetween(1.5 - 1);
-        var geometryNext = new THREE.BoxGeometry(cubeLenght,cubeLenght,cubeLenght);
-        var materialNext = new THREE.MeshStandardMaterial( { color : colorsDrawing[getRandomIntNumberBetween(colorsDrawing.length-1)], flatShading: true, metalness: 0, roughness: 1 })
-        cube = new THREE.Mesh(geometryNext,materialNext);
+        var geometryNext = new THREE.BoxGeometry(cubeLenght, cubeLenght, cubeLenght);
+        var materialNext = new THREE.MeshStandardMaterial({ color: colorsDrawing[getRandomIntNumberBetween(colorsDrawing.length - 1)], flatShading: true, metalness: 0, roughness: 1 })
+        cube = new THREE.Mesh(geometryNext, materialNext);
         scene.add(cube);
-        cube.position.set(0,0,0);
+        cube.position.set(0, 0, 0);
     }
 }

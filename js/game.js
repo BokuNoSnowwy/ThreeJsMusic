@@ -5,6 +5,10 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const renderer = new THREE.WebGLRenderer({ antialas: true });
 const clock = new THREE.Clock();
 
+//Mesh Import
+const loader = new FBXLoader();
+
+
 
 //Music 
 // create an AudioListener and add it to the camera
@@ -23,10 +27,33 @@ var countTic = 1;
 const torusMesh = [];
 const cubeMeshs = [];
 
+//Mesh Offsets
+const cubeOffset = new THREE.Vector3(1.08, -0.5, 0.06)
+let visibleMeshs = false;
+
+//Cube1
 var geometry = new THREE.BoxGeometry(1, 1, 1);
-var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: false });
+var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs});
 let cube1 = new THREE.Mesh(geometry, material);
 cubeMeshs.push(cube1);
+
+//Cube2
+var geometry = new THREE.BoxGeometry(1, 1, 1);
+var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs });
+let cube2 = new THREE.Mesh(geometry, material);
+cubeMeshs.push(cube2);
+
+//Cube3
+var geometry = new THREE.BoxGeometry(1, 1, 1);
+var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs });
+let cube3 = new THREE.Mesh(geometry, material);
+cubeMeshs.push(cube3);
+
+//Cube4
+var geometry = new THREE.BoxGeometry(1, 1, 1);
+var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs });
+let cube4 = new THREE.Mesh(geometry, material);
+cubeMeshs.push(cube4);
 
 const startButton = document.getElementById("startButton");
 startButton.addEventListener('click', function () {
@@ -89,8 +116,6 @@ function init() {
 
     sound.play();
 
-    //Mesh Import
-    const loader = new FBXLoader();
 
     //Torus 
     for (let i = 0; i < 4; i++) {
@@ -122,21 +147,7 @@ function init() {
         });
     }
 
-    loader.load('meshs/fbx/Cube.fbx', function (object) {
-        scene.add(object);
-
-        setUpMesh(cube1, object, new THREE.Vector3(-1.07, 0.5, 0))
-        var x = 1 / 10;
-        object.scale.set(x, x, x);
-
-        object.traverse(function (child) {
-            if (child.isMesh) {
-                child.material[1].emissive = new THREE.Color(0xff0000);
-                child.material[1].emissiveIntensity = 1;
-                child.material[1].color = new THREE.Color(0xff0000);;
-            }
-        });
-    });
+    cubeCreations();
 }
 
 animate();
@@ -205,11 +216,11 @@ function clockTic() {
 }
 
 //Permet de créer un mesh et de lui mettre un parent a sa position
-function setUpMesh(parent, child, position) {
+function setUpMesh(parent, child, positionParent,offsetChild) {
     scene.add(parent);
-    parent.position.copy(position);
+    parent.position.copy(positionParent);
     parent.add(child);
-    child.position.copy(new THREE.Vector3(-position.x, -position.y, -position.z));
+    child.position.copy(offsetChild);
 }
 
 function getRandomIntNumberBetween(max) {
@@ -220,6 +231,95 @@ function getRandomFloatNumberBetween(max) {
     return Math.random() * (max - 0 + 1) + 0;
 }
 
+function cubeCreations(){
+
+    //Cube1
+    loader.load('meshs/fbx/Cube.fbx', function (object) {
+        scene.add(object);
+
+        setUpMesh(cube1, object, new THREE.Vector3(-1.08, 0.5, 0),cubeOffset)
+        var x = 1 / 10;
+        object.scale.set(x, x, x);
+
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.material[1].emissive = new THREE.Color(0xff0000);
+                child.material[1].emissiveIntensity = 1;
+                child.material[1].color = new THREE.Color(0xff0000);;
+            }
+        });
+    });
+
+    
+    loader.load('meshs/fbx/Cube.fbx', function (object) {
+        scene.add(object);
+
+        setUpMesh(cube2, object, new THREE.Vector3(1.08, 0.5, 0),cubeOffset)
+        var x = 1 / 10;
+        object.scale.set(x, x, x);
+
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.material[1].emissive = new THREE.Color(0xff0000);
+                child.material[1].emissiveIntensity = 1;
+                child.material[1].color = new THREE.Color(0xff0000);;
+            }
+        });
+    });
+    
+
+        
+    loader.load('meshs/fbx/Cube.fbx', function (object) {
+        scene.add(object);
+
+        setUpMesh(cube3, object, new THREE.Vector3(1.5, -1.5, 0),cubeOffset)
+        var x = 1 / 10;
+        object.scale.set(x, x, x);
+
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.material[1].emissive = new THREE.Color(0xff0000);
+                child.material[1].emissiveIntensity = 1;
+                child.material[1].color = new THREE.Color(0xff0000);;
+            }
+        });
+    });
+        
+    loader.load('meshs/fbx/Cube.fbx', function (object) {
+        scene.add(object);
+
+        setUpMesh(cube4, object, new THREE.Vector3(-1.5, -1.5, 0),cubeOffset)
+        var x = 1 / 10;
+        object.scale.set(x, x, x);
+
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.material[1].emissive = new THREE.Color(0xff0000);
+                child.material[1].emissiveIntensity = 1;
+                child.material[1].color = new THREE.Color(0xff0000);;
+            }
+        });
+    });
+    
+    
+    /*
+    loader.load('meshs/fbx/Cube.fbx', function (object) {
+        scene.add(object);
+
+        setUpMesh(cube4, object, new THREE.Vector3(-1.07, -1, 0))
+        var x = 1 / 10;
+        object.scale.set(x, x, x);
+
+        object.traverse(function (child) {
+            if (child.isMesh) {
+                child.material[1].emissive = new THREE.Color(0xff0000);
+                child.material[1].emissiveIntensity = 1;
+                child.material[1].color = new THREE.Color(0xff0000);;
+            }
+        });
+    });
+    */
+}
 
 document.addEventListener("keydown", onDocumentKeyDown, false);
 function onDocumentKeyDown(event) {

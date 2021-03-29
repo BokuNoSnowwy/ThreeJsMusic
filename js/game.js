@@ -33,6 +33,14 @@ function hideButton(){
     document.getElementById("startButton").style.display = 'none';
 }
 
+    // load a sound and set it as the Audio object's buffer
+    const audioLoader = new THREE.AudioLoader();
+    audioLoader.load( 'audio/the-living-tombstone-dog-of-wisdom-remix-blue-feat-joe-gran.mp3', function( buffer ) {
+	sound.setBuffer( buffer );
+	sound.setLoop( true );
+	sound.setVolume( 0.1 );
+    });
+
 
 
 function init(){
@@ -76,15 +84,7 @@ function init(){
     //Camera Pos
     camera.position.z = 5;
 
-    // load a sound and set it as the Audio object's buffer
-    const audioLoader = new THREE.AudioLoader();
-    audioLoader.load( 'audio/the-living-tombstone-dog-of-wisdom-remix-blue-feat-joe-gran.mp3', function( buffer ) {
-	sound.setBuffer( buffer );
-	sound.setLoop( true );
-	sound.setVolume( 0.1 );
 	sound.play();
-    });
-
 
     //Mesh Import
     const loader = new FBXLoader();

@@ -18,7 +18,7 @@ const sound = new THREE.Audio( listener );
 const bpm = 128;
 const secondBeat = 1/(bpm /60);
 let timerTic = secondBeat;
-var countTic =0;
+var countTic = 1;
 //MeshArray
 const torusMesh = [];
 const cubeMeshs = [];
@@ -144,6 +144,7 @@ function init(){
                 if ( child.isMesh ) {
                     child.material[1].emissive = new THREE.Color( 0xff0000 );
                     child.material[1].emissiveIntensity = 1;
+                    child.material[1].color = new THREE.Color( 0xff0000 );;
 
                     console.log( child.material);
 
@@ -162,8 +163,6 @@ function init(){
 
 
 //Box
-
-
     const geometry = new THREE.BoxGeometry(1,1,1);
     const material = new THREE.MeshStandardMaterial( { color: 0xff0120, flatShading: true, metalness: 0, roughness: 1 });
     const cube = new THREE.Mesh(geometry,material);
@@ -181,15 +180,16 @@ function animate(){
     cube.rotation.x += 0.04;
     cube.rotation.y += 0.04;
 
+    console.log(countTic);
     //camera.position.z -= 0.01;
     camera.position.y = 0.15;
-
     //Torus Rotation
     torusMesh.forEach(torus => {
-        console.log(countTic%2);
+
         torus.rotation.y += 0.02;
-        switch (countTic%2){
-            case 0 :
+
+        switch (countTic > 2){
+            case true :
                 console.log("tik")
                 torus.traverse( function ( child ) {
                     if ( child.isMesh ) {
@@ -200,7 +200,7 @@ function animate(){
                     }
                 } );
                 break;
-            case 1 :
+            case false :
                 console.log("tok")
                 torus.traverse( function ( child ) {
                     if ( child.isMesh ) {
@@ -217,7 +217,7 @@ function animate(){
     //All Cube Rotation
     cubeMeshs.forEach(cube => {
         cube.rotation.x += 0.04;
-        cube.rotation.y += 0.04;
+        //cube.rotation.y += 0.04;
     });
 
     renderer.render(scene,camera);
@@ -231,12 +231,13 @@ function clockTic(){
             timerTic -= clock.getDelta();
             if(timerTic < 0){
                 countTic += 1;
-                if(countTic > 3){
-                    countTic = 0
+                if(countTic > 4){
+                    countTic = 1
                 }
                 timerTic = secondBeat;
             }
         }
+
     }
 }
 

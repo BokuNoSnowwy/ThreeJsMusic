@@ -215,8 +215,6 @@ function animate() {
             {
                 cube.scale.set(1.2, 1.2, 1.2);
             }
-
-            
         }
         else{
             ratioCube /= 2;
@@ -227,13 +225,12 @@ function animate() {
                 cube.scale.set(1.2, 1.2, 1.2);
             }
         }
-
-        console.log(ratioCube)
     });
 
     renderer.render(scene, camera);
 
 }
+
 
 let timerDemiTic;
 

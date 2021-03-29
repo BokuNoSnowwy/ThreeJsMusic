@@ -23,7 +23,7 @@ const bpm = 128;
 const secondBeat = 1 / (bpm / 60);
 let timerTic = secondBeat;
 var countTic = 1;
-var demiTic = false;
+var demiTic;
 //MeshArray
 const torusMesh = [];
 const cubeMeshs = [];
@@ -31,6 +31,8 @@ const cubeMeshs = [];
 //Mesh Offsets
 const cubeOffset = new THREE.Vector3(1.08, -0.5, 0.06)
 let visibleMeshs = false;
+
+let ratioCube = 0.025;
 
 //Cube1
 var geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -97,6 +99,10 @@ function init() {
         renderer.setSize(width, height)
         camera.aspect = width / height
         camera.updateProjectionMatrix()
+
+        ratioCubeT = 0.025
+
+        demiTic = false
     })
 
     renderer.setClearColor("#222222")
@@ -155,12 +161,7 @@ animate();
 clockTic();
 
 
-//Box
-    const geometry = new THREE.BoxGeometry(1,1,1);
-    const material = new THREE.MeshStandardMaterial( { color: 0xff0120, flatShading: true, metalness: 0, roughness: 1 });
-    const cubeT = new THREE.Mesh(geometry,material);
-    scene.add(cubeT);
-    let ratioCubeT = 0.0000244140625;
+
     
 
 //Box Animation
@@ -198,7 +199,7 @@ function animate() {
     });
 
    
-
+        
 
     //All Cube Rotation
     cubeMeshs.forEach(cube => {
@@ -207,22 +208,34 @@ function animate() {
         
         if(demiTic)
         {
-            ratioCubeT *= 2;
-            cubeT.scale.set(.8 + ratioCubeT, .8 + ratioCubeT, .8 + ratioCubeT)
+            ratioCube *= 2;
+            cube.scale.set(.8 + ratioCube , .8 + ratioCube , .8 + ratioCube)
+
+            if(cube.scale.x > 1.2)
+            {
+                cube.scale.set(1.2, 1.2, 1.2);
+            }
+
+            
         }
         else{
-            ratioCubeT /= 2;
-            cubeT.scale.set(1.2 - ratioCubeT, 1.2- ratioCubeT, 1.2 - ratioCubeT)
+            ratioCube /= 2;
+            cube.scale.set(1.2 - ratioCube, 1.2 - ratioCube, 1.2 - ratioCube)
 
+            if(cube.scale.x < 0.8)
+            {
+                cube.scale.set(1.2, 1.2, 1.2);
+            }
         }
 
-        console.log(cubeT.scale)
+        console.log(ratioCube)
     });
 
     renderer.render(scene, camera);
 
 }
 
+let timerDemiTic;
 
 function clockTic(){
     requestAnimationFrame(clockTic);
@@ -230,12 +243,20 @@ function clockTic(){
     if(sound){
         if(sound.isPlaying){
             timerTic -= clock.getDelta();
+            timerDemiTic = timerTic / 2;
+            if(timerDemiTic < 0)
+            {
+                ratioCube = 0.15;
+                
+                timerDemiTic = secondBeat;
+            }
             if (timerTic < 0) {
                 countTic += 1;
                 if (countTic > 4) {
                     countTic = 1
                 }
                 timerTic = secondBeat;
+                
             }
 
             
@@ -243,6 +264,7 @@ function clockTic(){
             if(timerTic <= secondBeat / 2)
             {
                 demiTic = true;
+                
                 
             }
             else{
@@ -253,6 +275,7 @@ function clockTic(){
         }
     }
 }
+
 
 //Permet de créer un mesh et de lui mettre un parent a sa position
 function setUpMesh(parent, child, positionParent,offsetChild) {

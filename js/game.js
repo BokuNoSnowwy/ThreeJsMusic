@@ -8,15 +8,16 @@ import { PointerLockControls } from '../controls/PointerLockControls.js';
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 var textureLoader = new THREE.TextureLoader();
-const renderer = new THREE.WebGLRenderer({ antialas: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true });
 const clock = new THREE.Clock();
+var accelerationValue;
 
 //First Person Camera
 const controls = new PointerLockControls(camera, renderer.domElement);
 controls.maxPolarAngle = 2;
 controls.minPolarAngle = 1;
 scene.add(controls.getObject());
-controls.getObject().position.set(0, 0, -2);
+controls.getObject().position.set(0, 0, -3);
 camera.rotation.y = 3;
 
 //Mesh Import
@@ -79,8 +80,8 @@ audioLoader.load('audio/the-living-tombstone-dog-of-wisdom-remix-blue-feat-joe-g
 });
 
 
-function init() {
 
+function init() {
     var ySpeed = 0.1;
     var xSpeed = 0.1;
 
@@ -108,18 +109,11 @@ function init() {
         demiTic = false
     })
 
-    renderer.setClearColor("#111111")
+    renderer.setClearColor("#222222")
 
     //Ambient Lights 
-    var ambientLight = new THREE.AmbientLight(0xffffff, 0.2)
+    var ambientLight = new THREE.AmbientLight(0xffffff, 20)
     scene.add(ambientLight)
-
-
-    //Point Lights
-    var pointLight = new THREE.PointLight(0xffffff, 1);
-    pointLight.position.set(25, 50, 25);
-    scene.add(pointLight);
-
 
     sound.play();
 
@@ -135,7 +129,15 @@ clockTic();
 //Box Animation
 function animate() {
     requestAnimationFrame(animate);
-    camera.position.z += 0.010;
+
+    if(totalTic > 55){
+    
+        camera.position.z += 0.010 + 0.010 * clock.getElapsedTime();
+    
+    }else{
+        camera.position.z += 0.010;
+    }
+
     //Torus Rotation
     torusMesh.forEach(torus => {
         torus.rotation.y += 0.02;
@@ -222,6 +224,10 @@ function clockTic() {
                 fillCubes();
                 timerTic = secondBeat;
                 checkTime();
+                if(totalTic > 55){
+                    clock.start();
+                    console.log("Acceleration !" + clock.getElapsedTime());
+                }
             }
             if (timerTic <= secondBeat / 2) {
                 demiTic = true;

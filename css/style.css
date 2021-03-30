@@ -11,3 +11,51 @@ nav {
     overflow: hidden;
     height: 60px;
 }
+
+body {
+    margin: 0;
+      overflow: hidden;
+}
+
+div {
+    width: 1920px;
+    height: 1080px;
+}
+
+button {
+    position: absolute;
+}
+
+#render {
+    background: #0000FF;
+    opacity: 1;
+}
+#curtain {
+    background: white;
+    position: absolute;
+    top: 0;
+	left: 0;
+    opacity: 0;
+}
+
+.screen-change {
+    animation-name: screen-change;
+    animation-duration: 2s;
+}
+
+@keyframes screen-change {
+    0% {opacity: 0;}
+    30% {opacity: 1;}
+    /* Waiting time */
+    70% {opacity: 1;}
+    100% {opacity: 0;}
+}
+
+#overlay {
+	background-color: #ff0000;
+	width: 10;
+	height: 10px;
+	position: absolute;
+	top: 0;
+	left: 0;
+}

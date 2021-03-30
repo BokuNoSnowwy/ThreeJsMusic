@@ -235,11 +235,11 @@ function clockTic() {
 
 function checkTime() {
     if (totalTic > 0 && totalTic < 22) {
-        colorScene = new THREE.Color(0xff0000);
+        colorScene = new THREE.Color(0xf80c0c);
     } else if (totalTic > 21 && totalTic < 45) {
-        colorScene = new THREE.Color(0x00ff00);
+        colorScene = new THREE.Color(0x007fff);
     } else if (totalTic > 44 && totalTic < 66) {
-        colorScene = new THREE.Color(0x0000ff);
+        colorScene = new THREE.Color(0xf7d618);
     }
 
     setupNewColorsMeshs();

@@ -173,64 +173,31 @@ function animate() {
             cube.children[0].children[0].rotation.z += 0.03;
         }
 
-        
-        
-
-        switch (countTic > 2) {
-            case true:
-                cube.traverse(function (child) {
-                    if (child.isMesh) {
-
-                        if(child.material[0] != null)
-                        {
-                            child.material[0].emissive = new THREE.Color(0x000000);
-                            child.material[0].color = new THREE.Color(0x000000);
-                            child.material[1].emissive = new THREE.Color(0xff0000);
-                            child.material[1].color = new THREE.Color(0xff0000);
-                        }
-                    }
-                });
-                break;
-            case false:
-                cube.traverse(function (child) {
-                    if (child.isMesh) {
-                        let i;
-                        if(countTic = 1)
-                        {
-                            i = THREE.MathUtils.randInt(0, 100);
-                        }
-
-                        
-                        
-
-                        if(i == 0){
-                            if(child.material[0] != null)
-                            {
-                                child.material[0].emissive = new THREE.Color(0xff0000);
-                                child.material[0].color = new THREE.Color(0xff0000);
-                                child.material[1].emissive = new THREE.Color(0xff0000);
-                                child.material[1].color = new THREE.Color(0xff0000);
-                            }
-                        }
-                        else{
-                            if(child.material[0] != null)
-                            {
-                            child.material[0].emissive = new THREE.Color(0x000000);
-                            child.material[0].color = new THREE.Color(0x000000);
-                            child.material[1].emissive = new THREE.Color(0xff0000);
-                            child.material[1].color = new THREE.Color(0xff0000);
-                            }
-                        }
-                        
-                        
-                    }
-                });
-                break;
-        }
     })
 
     renderer.render(scene, camera);
 
+}
+
+function fillCubes(){
+    cubeAligned.forEach(cube => {
+        let i = THREE.MathUtils.randInt(0, 100);
+
+        
+        if(i > 10){        
+            cube.children[0].children[0].material[0].emissive = new THREE.Color(0x000000);
+            cube.children[0].children[0].material[0].color = new THREE.Color(0x000000);
+            cube.children[0].children[0].material[1].emissive = colorScene;
+            cube.children[0].children[0].material[1].color = colorScene;
+        }
+        else{
+            cube.children[0].children[0].material[0].emissive = colorScene;
+            cube.children[0].children[0].material[0].color = colorScene;
+            cube.children[0].children[0].material[1].emissive = colorScene;
+            cube.children[0].children[0].material[1].color = colorScene;
+        }
+        
+    });
 }
 
 
@@ -252,6 +219,7 @@ function clockTic() {
                 if (countTic > 4) {
                     countTic = 1
                 }
+                fillCubes();
                 timerTic = secondBeat;
                 checkTime();
             }
@@ -318,22 +286,7 @@ function setupNewColorsMeshs() {
         }
     });
 
-    cubeAligned.forEach(object => {
-        switch (countTic > 2) {
-            case true:
-                object.children[0].children[0].material[0].emissive = new THREE.Color(0x000000);
-                object.children[0].children[0].material[0].color = new THREE.Color(0x000000);
-                object.children[0].children[0].material[1].emissive = colorScene;
-                object.children[0].children[0].material[1].color = colorScene;
-                break;
-            case false:
-                object.children[0].children[0].material[0].emissive = colorScene;
-                object.children[0].children[0].material[0].color = colorScene;
-                object.children[0].children[0].material[1].emissive = colorScene;
-                object.children[0].children[0].material[1].color = colorScene;
-                break;
-        }
-    });
+    
 }
 
 function setupEmissionTorus(object){

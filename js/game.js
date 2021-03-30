@@ -7,7 +7,8 @@ import { PointerLockControls } from '../controls/PointerLockControls.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+var textureLoader = new THREE.TextureLoader();
+const renderer = new THREE.WebGLRenderer({ antialas: true });
 const clock = new THREE.Clock();
 
 //First Person Camera
@@ -44,25 +45,25 @@ let ratioCube = 0.025;
 
 //Cube1
 var geometry = new THREE.BoxGeometry(1, 1, 1);
-var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs});
+var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs, emissiveMap: textureLoader.load(("glowmap_test.png")),});
 let cube1 = new THREE.Mesh(geometry, material);
 cubeMeshs.push(cube1);
 
 //Cube2
 var geometry = new THREE.BoxGeometry(1, 1, 1);
-var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs });
+var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs, emissiveMap: textureLoader.load(("glowmap_test.png")) });
 let cube2 = new THREE.Mesh(geometry, material);
 cubeMeshs.push(cube2);
 
 //Cube3
 var geometry = new THREE.BoxGeometry(1, 1, 1);
-var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs });
+var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs, emissiveMap: textureLoader.load(("glowmap_test.png")) });
 let cube3 = new THREE.Mesh(geometry, material);
 cubeMeshs.push(cube3);
 
 //Cube4
 var geometry = new THREE.BoxGeometry(1, 1, 1);
-var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs });
+var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs, emissiveMap: textureLoader.load(("glowmap_test.png")) });
 let cube4 = new THREE.Mesh(geometry, material);
 cubeMeshs.push(cube4);
 
@@ -177,6 +178,7 @@ function animate() {
     requestAnimationFrame(animate);
     controls.getObject().position.set( 0, 0, 2 );
     camera.position.y = 0.15;
+    camera.position.z -= 0.005;
     //Torus Rotation
     torusMesh.forEach(torus => {
 
@@ -211,6 +213,9 @@ function animate() {
     cubeMeshs.forEach(cube => {
         cube.rotation.x += 0.04;
         //cube.rotation.y += 0.04;
+
+        cube.material.emissive = new THREE.Color(0xffffff);
+        cube.material.emissiveIntensity = 1.0;
         
         if(demiTic)
         {

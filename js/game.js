@@ -122,39 +122,9 @@ function init() {
 
     sound.play();
 
-
-    //Torus 
-    for (let i = 0; i < 6; i++) {
-        loader.load('meshs/fbx/TorusCircle.fbx', function (object) {
-            scene.add(object);
-            torusMesh.push(object);
-
-            object.position.z += 2 * i;
-            object.rotation.x = 80;
-            object.rotation.y = 5 * i;
-
-            object.traverse(function (child) {
-                if (child.isMesh) {
-                    //Change Purple Mat
-                    child.material[1].emissive = child.material[1].color;
-                    child.material[1].emissiveIntensity = 0.50;
-
-                    //Change Red Mat
-                    child.material[4].emissive = child.material[4].color;
-                    child.material[4].emissiveIntensity = 0.50;
-                    //console.log( child.material);
-
-                    //Change Black Mat
-                    //child.material[3].color = new THREE.Color( 0xffffff );
-                }
-            });
-            var x = 1 / 7;
-            object.scale.set(x, x, x);
-        });
-    }
-
+    torusCreations();
     cubeCreations();
-    console.log(cubeMeshs)
+    setupNewColorsMeshs();
 }
 
 animate();
@@ -176,8 +146,7 @@ function animate() {
         cube.rotation.x += 0.04;
         //cube.rotation.y += 0.04;
 
-        if(demiTic)
-        {
+        if (demiTic) {
             ratioCube *= 2;
             cube.scale.set(cubeScaleMin + ratioCube, cubeScaleMin + ratioCube, cubeScaleMin + ratioCube)
 
@@ -194,40 +163,6 @@ function animate() {
             }
         }
     });
-/*
-    cubeAligned.forEach(cube => {
-
-        switch (countTic > 2) {
-            case true:
-                cube.traverse(function (child) {
-                    if (child.isMesh) {
-                        //console.log(child.material)
-                        if(child.material[0] != null)
-                        {
-                            child.material[0].emissive = new THREE.Color(0x000000);
-                            child.material[0].color = new THREE.Color(0x000000);
-                            child.material[1].emissive = new THREE.Color(0xff0000);
-                            child.material[1].color = new THREE.Color(0xff0000);
-                        }
-                    }
-                });
-                break;
-            case false:
-                cube.traverse(function (child) {
-                    if (child.isMesh) {
-                        if(child.material[0] != null)
-                        {
-                            child.material[0].emissive = new THREE.Color(0xff0000);
-                            child.material[0].color = new THREE.Color(0xff0000);
-                            child.material[1].emissive = new THREE.Color(0xff0000);
-                            child.material[1].color = new THREE.Color(0xff0000);
-                        }
-                        
-                    }
-                });
-                break;
-        }
-    })*/
 
     renderer.render(scene, camera);
 
@@ -265,12 +200,12 @@ function clockTic() {
     }
 }
 
-function checkTime(){
-    if(totalTic > 0 && totalTic < 22){
+function checkTime() {
+    if (totalTic > 0 && totalTic < 22) {
         colorScene = new THREE.Color(0xff0000);
-    }else if(totalTic > 21 && totalTic < 45){
+    } else if (totalTic > 21 && totalTic < 45) {
         colorScene = new THREE.Color(0x00ff00);
-    }else if(totalTic > 44 && totalTic < 66){
+    } else if (totalTic > 44 && totalTic < 66) {
         colorScene = new THREE.Color(0x0000ff);
     }
 
@@ -295,65 +230,169 @@ function getRandomFloatNumberBetween(max) {
 }
 
 //Setup Color of all meshs of the scene
-function setupNewColorsMeshs(){
+function setupNewColorsMeshs() {
     cubeMeshs.forEach(object => {
         object.children[0].children[0].material[1].color = colorScene;
         object.children[0].children[0].material[1].emissive = colorScene;
-    });    
+    });
 
     torusMesh.forEach(object => {
         switch (countTic > 2) {
-            case true :
+            case true:
                 object.children[0].material[1].emissive = new THREE.Color(0xffffff);
                 object.children[0].material[1].color = new THREE.Color(0xffffff);
                 object.children[0].material[4].emissive = colorScene;
                 object.children[0].material[4].color = colorScene;
-            break;
+                break;
             case false:
                 object.children[0].material[1].emissive = colorScene;
                 object.children[0].material[1].color = colorScene;
                 object.children[0].material[4].emissive = new THREE.Color(0xffffff);
                 object.children[0].material[4].color = new THREE.Color(0xffffff);
-            break;
+                break;
         }
     });
 
     cubeAligned.forEach(object => {
         switch (countTic > 2) {
-            case true :
+            case true:
                 object.children[0].children[0].material[0].emissive = new THREE.Color(0x000000);
                 object.children[0].children[0].material[0].color = new THREE.Color(0x000000);
                 object.children[0].children[0].material[1].emissive = colorScene;
                 object.children[0].children[0].material[1].color = colorScene;
-            break;
+                break;
             case false:
                 object.children[0].children[0].material[0].emissive = colorScene;
                 object.children[0].children[0].material[0].color = colorScene;
                 object.children[0].children[0].material[1].emissive = colorScene;
                 object.children[0].children[0].material[1].color = colorScene;
-            break;
+                break;
         }
     });
 }
 
+function setupEmissionTorus(object){
+    object.traverse(function (child) {
+        if (child.isMesh) {
+            //Change Purple Mat
+            child.material[1].emissive = child.material[1].color;
+            child.material[1].emissiveIntensity = 0.50;
+
+            //Change Red Mat
+            child.material[4].emissive = child.material[4].color;
+            child.material[4].emissiveIntensity = 0.50;
+        }
+    });
+}
+
+function torusCreations() {
+    //Torus 
+    let index = 6;
+    for (let i = 0; i < index; i++) {
+        loader.load('meshs/fbx/TorusCircle.fbx', function (object) {
+            scene.add(object);
+            torusMesh.push(object);
+
+            object.position.z += 2 * i;
+            object.rotation.x = 80;
+            object.rotation.y = 5 * i;
+            setupEmissionTorus(object);
+
+            var x = 1 / 7;
+            object.scale.set(x, x, x);
+        });
+    }
+
+    for (let i = 0; i < 6; i++) {
+
+        let offsetZ = (2 * i + index * 2);
+        if (i % 2 == 0) {
+            for (let j = 0; j < 2; j++) {
+                if(j == 0){
+                    loader.load('meshs/fbx/TorusCircle.fbx', function (object) {
+                        scene.add(object);
+                        torusMesh.push(object);
+        
+                        object.position.set(-1, 1, offsetZ);
+                        object.rotation.x = 80;
+                        object.rotation.y = 5 * i;
+
+                        setupEmissionTorus(object);
+
+                        var x = 1 / 7;
+                        object.scale.set(x, x, x);
+                    });
+                }else{
+                    loader.load('meshs/fbx/TorusCircle.fbx', function (object) {
+                        scene.add(object);
+                        torusMesh.push(object);
+        
+                        object.position.set(1, 1, offsetZ);
+                        object.rotation.x = 80;
+                        object.rotation.y = 5 * i;
+        
+                        setupEmissionTorus(object);
+
+                        var x = 1 / 7;
+                        object.scale.set(x, x, x);
+                    });
+                }
+            }
+        }else{
+            for (let j = 0; j < 2; j++) {
+                if(j == 0){
+                    loader.load('meshs/fbx/TorusCircle.fbx', function (object) {
+                        scene.add(object);
+                        torusMesh.push(object);
+        
+                        object.position.set(-1, -1, offsetZ);
+                        object.rotation.x = 80;
+                        object.rotation.y = 5 * i;
+        
+                        setupEmissionTorus(object);
+
+                        var x = 1 / 7;
+                        object.scale.set(x, x, x);
+                    });
+                }else{
+                    loader.load('meshs/fbx/TorusCircle.fbx', function (object) {
+                        scene.add(object);
+                        torusMesh.push(object);
+        
+                        object.position.set(1, -1, offsetZ);
+                        object.rotation.x = 80;
+                        object.rotation.y = 5 * i;
+        
+                        setupEmissionTorus(object);
+
+                        var x = 1 / 7;
+                        object.scale.set(x, x, x);
+                    });
+                }
+            }
+        }
+        
+    }
+}
+
 function cubeCreations() {
     for (let i = 0; i < 10; i++) {
-        if(i%2 == 0){
+        if (i % 2 == 0) {
             for (let j = 0; j < 2; j++) {
                 if (j == 0) {
                     //Cubes Right
                     loader.load('meshs/fbx/Cube.fbx', function (object) {
                         scene.add(object);
-    
+
                         var geometry = new THREE.BoxGeometry(1, 1, 1);
                         var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs, emissiveMap: textureLoader.load(("glowmap_test.png")), });
                         var cube = new THREE.Mesh(geometry, material);
                         cubeMeshs.push(cube);
-    
+
                         setUpMesh(cube, object, new THREE.Vector3(0.75, 0, 1 * i), cubeOffset)
                         var x = 1 / 10;
                         object.scale.set(x, x, x);
-    
+
                         object.traverse(function (child) {
                             if (child.isMesh) {
                                 child.material[1].emissive = colorScene;
@@ -362,21 +401,20 @@ function cubeCreations() {
                             }
                         });
                     });
-                } else {    
+                } else {
                     //Cubes Left
-                    console.log('1');
                     loader.load('meshs/fbx/Cube.fbx', function (object) {
                         scene.add(object);
-    
+
                         var geometry = new THREE.BoxGeometry(1, 1, 1);
                         var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs, emissiveMap: textureLoader.load(("glowmap_test.png")), });
                         var cube = new THREE.Mesh(geometry, material);
                         cubeMeshs.push(cube);
-    
+
                         setUpMesh(cube, object, new THREE.Vector3(-0.75, 0, 1 * i), cubeOffset)
                         var x = 1 / 10;
                         object.scale.set(x, x, x);
-    
+
                         object.traverse(function (child) {
                             if (child.isMesh) {
                                 child.material[1].emissive = colorScene;
@@ -387,22 +425,22 @@ function cubeCreations() {
                     });
                 }
             }
-        }else{
+        } else {
             for (let j = 0; j < 2; j++) {
                 if (j == 0) {
                     //Cubes Right
                     loader.load('meshs/fbx/Cube.fbx', function (object) {
                         scene.add(object);
-    
+
                         var geometry = new THREE.BoxGeometry(1, 1, 1);
                         var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs, emissiveMap: textureLoader.load(("glowmap_test.png")), });
                         var cube = new THREE.Mesh(geometry, material);
                         cubeMeshs.push(cube);
-    
+
                         setUpMesh(cube, object, new THREE.Vector3(0, -0.75, 1 * i), cubeOffset)
                         var x = 1 / 10;
                         object.scale.set(x, x, x);
-    
+
                         object.traverse(function (child) {
                             if (child.isMesh) {
                                 child.material[1].emissive = colorScene;
@@ -411,21 +449,21 @@ function cubeCreations() {
                             }
                         });
                     });
-                } else {    
+                } else {
                     //Cubes Left
                     console.log('1');
                     loader.load('meshs/fbx/Cube.fbx', function (object) {
                         scene.add(object);
-    
+
                         var geometry = new THREE.BoxGeometry(1, 1, 1);
                         var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs, emissiveMap: textureLoader.load(("glowmap_test.png")), });
                         var cube = new THREE.Mesh(geometry, material);
                         cubeMeshs.push(cube);
-    
+
                         setUpMesh(cube, object, new THREE.Vector3(0, 0.75, 1 * i), cubeOffset)
                         var x = 1 / 10;
                         object.scale.set(x, x, x);
-    
+
                         object.traverse(function (child) {
                             if (child.isMesh) {
                                 child.material[1].emissive = colorScene;
@@ -438,8 +476,6 @@ function cubeCreations() {
             }
         }
     }
-
-    
     loader.load('meshs/fbx/Cube.fbx', function (object) {
         scene.add(object);
 
@@ -448,7 +484,7 @@ function cubeCreations() {
         let cube5 = new THREE.Mesh(geometry, material);
         cubeAligned.push(cube5);
 
-        setUpMesh(cube5, object, new THREE.Vector3(0, 0, 0),cubeOffset)
+        setUpMesh(cube5, object, new THREE.Vector3(0, 0, 0), cubeOffset)
         var x = 1 / 10;
         object.scale.set(x, x, x);
 

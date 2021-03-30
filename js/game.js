@@ -174,20 +174,20 @@ function animate() {
             case true:
                 torus.traverse(function (child) {
                     if (child.isMesh) {
-                        child.material[1].emissive = new THREE.Color(0x8a2be2);
-                        child.material[1].color = new THREE.Color(0x8a2be2);
-                        child.material[4].emissive = new THREE.Color(0xff0000);
-                        child.material[4].color = new THREE.Color(0xff0000);
+                        child.material[1].emissive = new THREE.Color(0xffffff);
+                        child.material[1].color = new THREE.Color(0xffffff);
+                        child.material[4].emissive = colorScene;
+                        child.material[4].color = colorScene;
                     }
                 });
                 break;
             case false:
                 torus.traverse(function (child) {
                     if (child.isMesh) {
-                        child.material[1].emissive = new THREE.Color(0xff0000);
-                        child.material[1].color = new THREE.Color(0xff0000);
-                        child.material[4].emissive = new THREE.Color(0x8a2be2);
-                        child.material[4].color = new THREE.Color(0x8a2be2);
+                        child.material[1].emissive = colorScene;
+                        child.material[1].color = colorScene;
+                        child.material[4].emissive = new THREE.Color(0xffffff);
+                        child.material[4].color = new THREE.Color(0xffffff);
                     }
                 });
                 break;
@@ -290,11 +290,11 @@ function clockTic() {
 }
 
 function checkTime(){
-    if(totalTic > 0 && totalTic < 9){
+    if(totalTic > 0 && totalTic < 22){
         colorScene = new THREE.Color(0xff0000);
-    }else if(totalTic > 8 && totalTic < 17){
+    }else if(totalTic > 21 && totalTic < 45){
         colorScene = new THREE.Color(0x00ff00);
-    }else if(totalTic > 16 && totalTic < 25){
+    }else if(totalTic > 44 && totalTic < 66){
         colorScene = new THREE.Color(0x0000ff);
     }
 

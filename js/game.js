@@ -112,7 +112,7 @@ function init() {
     renderer.setClearColor("#222222")
 
     //Ambient Lights 
-    var ambientLight = new THREE.AmbientLight(0xffffff, 20)
+    var ambientLight = new THREE.AmbientLight(0xffffff, 0.2)
     scene.add(ambientLight)
 
     sound.play();
@@ -129,8 +129,8 @@ clockTic();
 //Box Animation
 function animate() {
     requestAnimationFrame(animate);
-
-    if(totalTic > 55){
+    console.log(totalTic);
+    if(totalTic >= 55){
     
         camera.position.z += 0.010 + 0.010 * clock.getElapsedTime();
     
@@ -224,9 +224,8 @@ function clockTic() {
                 fillCubes();
                 timerTic = secondBeat;
                 checkTime();
-                if(totalTic > 55){
+                if(totalTic == 55){
                     clock.start();
-                    console.log("Acceleration !" + clock.getElapsedTime());
                 }
             }
             if (timerTic <= secondBeat / 2) {
@@ -240,11 +239,11 @@ function clockTic() {
 }
 
 function checkTime() {
-    if (totalTic > 0 && totalTic < 22) {
+    if (totalTic > 0 && totalTic < 25) {
         colorScene = new THREE.Color(0xf80c0c);
-    } else if (totalTic > 21 && totalTic < 45) {
+    } else if (totalTic > 24 && totalTic < 42) {
         colorScene = new THREE.Color(0x007fff);
-    } else if (totalTic > 44 && totalTic < 66) {
+    } else if (totalTic > 41 && totalTic < 66) {
         colorScene = new THREE.Color(0xf7d618);
     }
 
@@ -327,7 +326,7 @@ function torusCreations() {
         });
     }
 
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 12; i++) {
 
         let offsetZ = (2 * i + index * 2);
         if (i % 2 == 0) {

@@ -49,6 +49,7 @@ const cubeAligned = [];
 
 //Mesh Offsets
 const cubeOffset = new THREE.Vector3(1.08, -0.5, 0.06)
+const cubeAltOffset = new THREE.Vector3(-2.6, -0.5, 0.06)
 let visibleMeshs = false;
 let ratioCube = 0.025;
 
@@ -63,7 +64,7 @@ startButton.addEventListener('click', function () {
     init();
     hideButton();
     controls.lock();
-    console.log(controls);
+    //console.log(controls);
 })
 function hideButton() {
     document.getElementById("startButton").style.display = 'none';
@@ -154,7 +155,7 @@ function init() {
     }
 
     cubeCreations();
-    console.log(cubeMeshs)
+    //console.log(cubeMeshs)
 }
 
 animate();
@@ -220,12 +221,21 @@ function animate() {
     });
 
     cubeAligned.forEach(cube => {
+        if(cube.position.x <= 0){
+            cube.children[0].children[0].rotation.z -= 0.03;
+        }
+        else{
+            cube.children[0].children[0].rotation.z += 0.03;
+        }
+
+        
+        
 
         switch (countTic > 2) {
             case true:
                 cube.traverse(function (child) {
                     if (child.isMesh) {
-                        //console.log(child.material)
+
                         if(child.material[0] != null)
                         {
                             child.material[0].emissive = new THREE.Color(0x000000);
@@ -239,13 +249,34 @@ function animate() {
             case false:
                 cube.traverse(function (child) {
                     if (child.isMesh) {
-                        if(child.material[0] != null)
+                        let i;
+                        if(countTic = 1)
                         {
-                            child.material[0].emissive = new THREE.Color(0xff0000);
-                            child.material[0].color = new THREE.Color(0xff0000);
+                            i = THREE.MathUtils.randInt(0, 100);
+                        }
+
+                        
+                        
+
+                        if(i == 0){
+                            if(child.material[0] != null)
+                            {
+                                child.material[0].emissive = new THREE.Color(0xff0000);
+                                child.material[0].color = new THREE.Color(0xff0000);
+                                child.material[1].emissive = new THREE.Color(0xff0000);
+                                child.material[1].color = new THREE.Color(0xff0000);
+                            }
+                        }
+                        else{
+                            if(child.material[0] != null)
+                            {
+                            child.material[0].emissive = new THREE.Color(0x000000);
+                            child.material[0].color = new THREE.Color(0x000000);
                             child.material[1].emissive = new THREE.Color(0xff0000);
                             child.material[1].color = new THREE.Color(0xff0000);
+                            }
                         }
+                        
                         
                     }
                 });
@@ -320,7 +351,7 @@ function getRandomFloatNumberBetween(max) {
 
 function setupNewColorsMeshs(){
     cubeMeshs.forEach(object => {
-        console.log(object.children[0]);
+        //console.log(object.children[0]);
         /*
         object.children.traverse(function (children) {
             if (children.isMesh) {
@@ -360,7 +391,7 @@ function cubeCreations() {
                     });
                 } else {    
                     //Cubes Left
-                    console.log('1');
+                    //console.log('1');
                     loader.load('meshs/fbx/Cube.fbx', function (object) {
                         scene.add(object);
     
@@ -409,7 +440,7 @@ function cubeCreations() {
                     });
                 } else {    
                     //Cubes Left
-                    console.log('1');
+                    //console.log('1');
                     loader.load('meshs/fbx/Cube.fbx', function (object) {
                         scene.add(object);
     
@@ -435,30 +466,142 @@ function cubeCreations() {
         }
     }
 
-    
-    loader.load('meshs/fbx/Cube.fbx', function (object) {
-        scene.add(object);
 
-        var geometry = new THREE.BoxGeometry(1, 1, 1);
-        var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs, emissiveMap: textureLoader.load(("glowmap_test.png")) });
-        let cube5 = new THREE.Mesh(geometry, material);
-        cubeAligned.push(cube5);
 
-        setUpMesh(cube5, object, new THREE.Vector3(0, 0, 0),cubeOffset)
-        var x = 1 / 10;
-        object.scale.set(x, x, x);
+    for (let i = 0; i < 10; i++) {
+        
+        for (let j = 0; j < 2; j++) {
 
-        object.traverse(function (child) {
-            if (child.isMesh) {
-                child.material[0].emissive = new THREE.Color(0x000000);
-                child.material[0].emissiveIntensity = 1;
-                child.material[0].color = new THREE.Color(0x000000);;
-                child.material[1].emissive = new THREE.Color(0xff0000);
-                child.material[1].emissiveIntensity = 1;
-                child.material[1].color = new THREE.Color(0x000000);;
+            for(let k = 0; k < 2; k++) {
+
+                //Cubes Right
+                loader.load('meshs/fbx/Cube.fbx', function (object) {
+                    scene.add(object);
+
+                    var geometry = new THREE.BoxGeometry(1, 1, 1);
+                    var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs, emissiveMap: textureLoader.load(("glowmap_test.png")) });
+                    let cube5 = new THREE.Mesh(geometry, material);
+                    cube5.scale.set(.1, .1, .1);
+                    cubeAligned.push(cube5);
+
+                    setUpMesh(cube5, object, new THREE.Vector3(0.75 * j, 0.75 * k, 1 * i),cubeAltOffset)
+                    var x = 1 / 10;
+                    object.scale.set(x, x, x);
+
+                    object.traverse(function (child) {
+                        if (child.isMesh) {
+                            child.material[0].emissive = new THREE.Color(0x000000);
+                            child.material[0].emissiveIntensity = 1;
+                            child.material[0].color = new THREE.Color(0x000000);;
+                            child.material[1].emissive = new THREE.Color(0xff0000);
+                            child.material[1].emissiveIntensity = 1;
+                            child.material[1].color = new THREE.Color(0x000000);;
+                        }
+                    });
+
+                }); 
             }
-        });
-    });
+                 
+            //Cubes Right
+            for(let k = 0; k < 2; k++) {
+                //Cubes Right
+                loader.load('meshs/fbx/Cube.fbx', function (object) {
+                    scene.add(object);
+
+                    var geometry = new THREE.BoxGeometry(1, 1, 1);
+                    var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs, emissiveMap: textureLoader.load(("glowmap_test.png")) });
+                    let cube5 = new THREE.Mesh(geometry, material);
+                    cube5.scale.set(.1, .1, .1);
+                    cubeAligned.push(cube5);
+
+                    setUpMesh(cube5, object, new THREE.Vector3(-0.75 * j, -0.75 * k, 1 * i),cubeAltOffset)
+                    var x = 1 / 10;
+                    object.scale.set(x, x, x);
+
+                    object.traverse(function (child) {
+                        if (child.isMesh) {
+                            child.material[0].emissive = new THREE.Color(0x000000);
+                            child.material[0].emissiveIntensity = 1;
+                            child.material[0].color = new THREE.Color(0x000000);;
+                            child.material[1].emissive = new THREE.Color(0xff0000);
+                            child.material[1].emissiveIntensity = 1;
+                            child.material[1].color = new THREE.Color(0x000000);;
+                        }
+                    });
+
+                }); 
+            }
+        }
+        
+        
+        for (let j = 0; j < 2; j++) {
+                
+            //Cubes Right
+            for(let k = 0; k < 2; k++) {
+                //Cubes Right
+                loader.load('meshs/fbx/Cube.fbx', function (object) {
+                    scene.add(object);
+
+                    var geometry = new THREE.BoxGeometry(1, 1, 1);
+                    var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs, emissiveMap: textureLoader.load(("glowmap_test.png")) });
+                    let cube5 = new THREE.Mesh(geometry, material);
+                    cube5.scale.set(.1, .1, .1);
+                    cubeAligned.push(cube5);
+
+                    setUpMesh(cube5, object, new THREE.Vector3(-0.75 * k, 0.75 * j, 1 * i),cubeAltOffset)
+                    var x = 1 / 10;
+                    object.scale.set(x, x, x);
+
+                    object.traverse(function (child) {
+                        if (child.isMesh) {
+                            child.material[0].emissive = new THREE.Color(0x000000);
+                            child.material[0].emissiveIntensity = 1;
+                            child.material[0].color = new THREE.Color(0x000000);;
+                            child.material[1].emissive = new THREE.Color(0xff0000);
+                            child.material[1].emissiveIntensity = 1;
+                            child.material[1].color = new THREE.Color(0x000000);;
+                        }
+                    });
+
+                }); 
+            }
+                   
+            
+            for(let k = 0; k < 3; k++) {
+                //Cubes Right
+                loader.load('meshs/fbx/Cube.fbx', function (object) {
+                    scene.add(object);
+
+                    var geometry = new THREE.BoxGeometry(1, 1, 1);
+                    var material = new THREE.MeshStandardMaterial({ color: 0xff0120, flatShading: true, metalness: 0, roughness: 1, visible: visibleMeshs, emissiveMap: textureLoader.load(("glowmap_test.png")) });
+                    let cube5 = new THREE.Mesh(geometry, material);
+                    cube5.scale.set(.1, .1, .1);
+                    cubeAligned.push(cube5);
+
+                    setUpMesh(cube5, object, new THREE.Vector3(0.75 * k, -0.75 * j, 1 * i),cubeAltOffset)
+                    var x = 1 / 10;
+                    object.scale.set(x, x, x);
+
+                    object.traverse(function (child) {
+                        if (child.isMesh) {
+                            child.material[0].emissive = new THREE.Color(0x000000);
+                            child.material[0].emissiveIntensity = 1;
+                            child.material[0].color = new THREE.Color(0x000000);;
+                            child.material[1].emissive = new THREE.Color(0xff0000);
+                            child.material[1].emissiveIntensity = 1;
+                            child.material[1].color = new THREE.Color(0x000000);;
+                        }
+                    });
+
+                }); 
+            }
+                
+            }
+        
+    }
+
+
+    
 }
 
 document.addEventListener("keydown", onDocumentKeyDown, false);

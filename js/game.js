@@ -40,7 +40,7 @@ var demiTic;
 let timerDemiTic;
 
 //Color
-var colorScene = new THREE.Color(0xffffff);
+var colorScene = new THREE.Color(0xff0000);
 
 //MeshArray
 const torusMesh = [];
@@ -320,15 +320,8 @@ function getRandomFloatNumberBetween(max) {
 
 function setupNewColorsMeshs(){
     cubeMeshs.forEach(object => {
-        console.log(object.children[0]);
-        /*
-        object.children.traverse(function (children) {
-            if (children.isMesh) {
-                children.material[1].emissive = colorScene;
-                children.material[1].color = colorScene;
-            }
-        });
-        */
+        object.children[0].children[0].material[1].color = colorScene;
+        object.children[0].children[0].material[1].emissive = colorScene;
     });    
 }
 

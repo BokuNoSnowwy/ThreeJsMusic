@@ -131,7 +131,7 @@ function animate() {
     
     requestAnimationFrame(animate);
     if(started){
-        console.log(totalTic);
+
         if(totalTic >= 55){
         
             camera.position.z += 0.010 + 0.010 * clock.getElapsedTime();
@@ -314,7 +314,7 @@ function setupEmissionTorus(object){
 
 function torusCreations() {
     //Torus 
-    let index = 6;
+    let index = 8;
     for (let i = 0; i < index; i++) {
         loader.load('meshs/fbx/TorusCircle.fbx', function (object) {
             scene.add(object);
@@ -330,8 +330,8 @@ function torusCreations() {
         });
     }
 
-    for (let i = 0; i < 12; i++) {
-
+    for (let i = 0; i < 10; i++) {
+        let offsetEnd = ((i)*5/10);
         let offsetZ = (2 * i + index * 2);
         if (i % 2 == 0) {
             for (let j = 0; j < 2; j++) {
@@ -340,7 +340,7 @@ function torusCreations() {
                         scene.add(object);
                         torusMesh.push(object);
         
-                        object.position.set(-1, 1, offsetZ);
+                        object.position.set(-1 - offsetEnd,1 + offsetEnd, offsetZ);
                         object.rotation.x = 80;
                         object.rotation.y = 5 * i;
 
@@ -358,7 +358,7 @@ function torusCreations() {
                         let cube5 = new THREE.Mesh(geometry, material);
                         cubeAligned.push(cube5);
     
-                        setUpMesh(cube5, object, new THREE.Vector3(-1, -1, offsetZ),cubeOffset)
+                        setUpMesh(cube5, object, new THREE.Vector3(-1 - offsetEnd, -1 - offsetEnd, offsetZ),cubeOffset)
                         var x = 1 / 10;
                         object.scale.set(x, x, x);
     
@@ -379,7 +379,7 @@ function torusCreations() {
                         scene.add(object);
                         torusMesh.push(object);
         
-                        object.position.set(1, 1, offsetZ);
+                        object.position.set(1 + offsetEnd, 1 + offsetEnd, offsetZ);
                         object.rotation.x = 80;
                         object.rotation.y = 5 * i;
         
@@ -397,7 +397,7 @@ function torusCreations() {
                         let cube5 = new THREE.Mesh(geometry, material);
                         cubeAligned.push(cube5);
     
-                        setUpMesh(cube5, object, new THREE.Vector3(1, -1, offsetZ),cubeOffset)
+                        setUpMesh(cube5, object, new THREE.Vector3(1 + offsetEnd, -1 - offsetEnd, offsetZ),cubeOffset)
                         var x = 1 / 10;
                         object.scale.set(x, x, x);
     
@@ -422,7 +422,7 @@ function torusCreations() {
                         scene.add(object);
                         torusMesh.push(object);
         
-                        object.position.set(-1, -1, offsetZ);
+                        object.position.set(-1 - offsetEnd, -1 - offsetEnd, offsetZ);
                         object.rotation.x = 80;
                         object.rotation.y = 5 * i;
         
@@ -440,7 +440,7 @@ function torusCreations() {
                         let cube5 = new THREE.Mesh(geometry, material);
                         cubeAligned.push(cube5);
     
-                        setUpMesh(cube5, object, new THREE.Vector3(-1, 1, offsetZ),cubeOffset)
+                        setUpMesh(cube5, object, new THREE.Vector3(-1 - offsetEnd, 1 + offsetEnd, offsetZ),cubeOffset)
                         var x = 1 / 10;
                         object.scale.set(x, x, x);
     
@@ -461,7 +461,7 @@ function torusCreations() {
                         scene.add(object);
                         torusMesh.push(object);
         
-                        object.position.set(1, -1, offsetZ);
+                        object.position.set(1 + offsetEnd, -1 - offsetEnd, offsetZ);
                         object.rotation.x = 80;
                         object.rotation.y = 5 * i;
         
@@ -480,7 +480,7 @@ function torusCreations() {
                         let cube5 = new THREE.Mesh(geometry, material);
                         cubeAligned.push(cube5);
     
-                        setUpMesh(cube5, object, new THREE.Vector3(1, 1, offsetZ),cubeOffset)
+                        setUpMesh(cube5, object, new THREE.Vector3(1 + offsetEnd, 1 + offsetEnd, offsetZ),cubeOffset)
                         var x = 1 / 10;
                         object.scale.set(x, x, x);
     

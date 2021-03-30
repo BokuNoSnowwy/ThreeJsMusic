@@ -124,7 +124,7 @@ function init() {
 
 
     //Torus 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 6; i++) {
         loader.load('meshs/fbx/TorusCircle.fbx', function (object) {
             scene.add(object);
             torusMesh.push(object);
@@ -167,31 +167,7 @@ function animate() {
     camera.position.z += 0.010;
     //Torus Rotation
     torusMesh.forEach(torus => {
-
         torus.rotation.y += 0.02;
-
-        switch (countTic > 2) {
-            case true:
-                torus.traverse(function (child) {
-                    if (child.isMesh) {
-                        child.material[1].emissive = new THREE.Color(0xffffff);
-                        child.material[1].color = new THREE.Color(0xffffff);
-                        child.material[4].emissive = colorScene;
-                        child.material[4].color = colorScene;
-                    }
-                });
-                break;
-            case false:
-                torus.traverse(function (child) {
-                    if (child.isMesh) {
-                        child.material[1].emissive = colorScene;
-                        child.material[1].color = colorScene;
-                        child.material[4].emissive = new THREE.Color(0xffffff);
-                        child.material[4].color = new THREE.Color(0xffffff);
-                    }
-                });
-                break;
-        }
     });
 
 
@@ -218,7 +194,7 @@ function animate() {
             }
         }
     });
-
+/*
     cubeAligned.forEach(cube => {
 
         switch (countTic > 2) {
@@ -251,7 +227,7 @@ function animate() {
                 });
                 break;
         }
-    })
+    })*/
 
     renderer.render(scene, camera);
 
@@ -318,11 +294,46 @@ function getRandomFloatNumberBetween(max) {
     return Math.random() * (max - 0 + 1) + 0;
 }
 
+//Setup Color of all meshs of the scene
 function setupNewColorsMeshs(){
     cubeMeshs.forEach(object => {
         object.children[0].children[0].material[1].color = colorScene;
         object.children[0].children[0].material[1].emissive = colorScene;
     });    
+
+    torusMesh.forEach(object => {
+        switch (countTic > 2) {
+            case true :
+                object.children[0].material[1].emissive = new THREE.Color(0xffffff);
+                object.children[0].material[1].color = new THREE.Color(0xffffff);
+                object.children[0].material[4].emissive = colorScene;
+                object.children[0].material[4].color = colorScene;
+            break;
+            case false:
+                object.children[0].material[1].emissive = colorScene;
+                object.children[0].material[1].color = colorScene;
+                object.children[0].material[4].emissive = new THREE.Color(0xffffff);
+                object.children[0].material[4].color = new THREE.Color(0xffffff);
+            break;
+        }
+    });
+
+    cubeAligned.forEach(object => {
+        switch (countTic > 2) {
+            case true :
+                object.children[0].children[0].material[0].emissive = new THREE.Color(0x000000);
+                object.children[0].children[0].material[0].color = new THREE.Color(0x000000);
+                object.children[0].children[0].material[1].emissive = colorScene;
+                object.children[0].children[0].material[1].color = colorScene;
+            break;
+            case false:
+                object.children[0].children[0].material[0].emissive = colorScene;
+                object.children[0].children[0].material[0].color = colorScene;
+                object.children[0].children[0].material[1].emissive = colorScene;
+                object.children[0].children[0].material[1].color = colorScene;
+            break;
+        }
+    });
 }
 
 function cubeCreations() {

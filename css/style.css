@@ -2,7 +2,11 @@ body {
     margin : 0px;
     padding: 0px;
     overflow: hidden;
+    background-color: #111111;
+    vertical-align: middle;
+    text-align: center;
 }
+
 
 nav {
     margin: 0px;
@@ -10,11 +14,6 @@ nav {
     text-underline-offset: 0;
     overflow: hidden;
     height: 60px;
-}
-
-body {
-    margin: 0;
-      overflow: hidden;
 }
 
 div {
@@ -58,4 +57,17 @@ button {
 	position: absolute;
 	top: 0;
 	left: 0;
+}
+
+    
+button{
+    background-color: #1e045a;
+    border: none;
+    color: white;
+    padding: 15px 30px;
+    text-align: center;
+    display: inline-block;
+    font-size: 30px;
+    vertical-align: middle;
+    text-align: center;
 }
